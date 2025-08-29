@@ -1,7 +1,6 @@
 import keyboard
 import pyperclip
-import openai
-from openai import OpenAI
+import google.generativeai as genai
 import time
 import threading
 
@@ -12,9 +11,10 @@ class SpellChecker:
         Inicjalizacja korektora literówek
 
         Args:
-            api_key (str): Klucz API do OpenAI
+            api_key (str): Klucz API do Google Gemini
         """
-        self.client = OpenAI(api_key=api_key)
+        genai.configure(api_key=api_key)
+        self.model = genai.GenerativeModel('gemini-1.5-flash')
         self.is_processing = False
 
     def get_selected_text(self):
@@ -50,7 +50,7 @@ class SpellChecker:
 
     def correct_spelling(self, text):
         """
-        Poprawia literówki używając OpenAI API
+        Poprawia literówki używając Gemini API
 
         Args:
             text (str): Tekst do korekty
@@ -59,24 +59,21 @@ class SpellChecker:
             str: Poprawiony tekst lub None w przypadku błędu
         """
         try:
-            prompt = """Popraw tylko literówki w podanym tekście. Nie zmieniaj treści, stylu, formatowania ani struktury tekstu. 
+            prompt = f"""Popraw tylko literówki w podanym tekście. Nie zmieniaj treści, stylu, formatowania ani struktury tekstu. 
 Zwróć tylko poprawiony tekst bez żadnych dodatkowych komentarzy czy wyjaśnień.
 
 Tekst do korekty:
-"""
+{text}"""
 
-            response = self.client.chat.completions.create(
-                model="gpt-3.5-turbo",  # Możesz zmienić na gpt-4 jeśli masz dostęp
-                messages=[
-                    {"role": "system",
-                     "content": "Jesteś korektorem tekstu. Poprawiasz tylko literówki, nie zmieniając treści ani stylu."},
-                    {"role": "user", "content": prompt + text}
-                ],
-                max_tokens=len(text.split()) * 2,  # Zapas na poprawki
-                temperature=0.1  # Niska temperatura dla większej precyzji
+            response = self.model.generate_content(
+                prompt,
+                generation_config=genai.types.GenerationConfig(
+                    max_output_tokens=len(text.split()) * 2,  # Zapas na poprawki
+                    temperature=0.1  # Niska temperatura dla większej precyzji
+                )
             )
 
-            corrected_text = response.choices[0].message.content.strip()
+            corrected_text = response.text.strip()
             return corrected_text
 
         except Exception as e:
@@ -171,12 +168,12 @@ Tekst do korekty:
 
 
 def main():
-    # UWAGA: Wstaw tutaj swój klucz API OpenAI
-    API_KEY = "your-openai-api-key-here"
+    # UWAGA: Wstaw tutaj swój klucz API Google Gemini
+    API_KEY = "your-gemini-api-key-here"
 
-    if API_KEY == "your-openai-api-key-here":
-        print("❌ Błąd: Musisz wstawić swój klucz API OpenAI w zmiennej API_KEY")
-        print("💡 Pobierz klucz z: https://platform.openai.com/api-keys")
+    if API_KEY == "your-gemini-api-key-here":
+        print("❌ Błąd: Musisz wstawić swój klucz API Google Gemini w zmiennej API_KEY")
+        print("💡 Pobierz klucz z: https://aistudio.google.com/app/apikey")
         return
 
     try:
