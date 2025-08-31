@@ -1,28 +1,46 @@
-# Korekcja literówek
+# Typo correction
 
-Skrypt Python do automatycznego wykrywania i poprawiania literówek w plikach tekstowych.
+A Python script for automatic spell checking and correction using Google Gemini AI.
 
-## Co robi
+## What it does
 
-Wykrywa błędy ortograficzne i proponuje poprawki używając słownika i algorytmów odległości edycji.
+Detects spelling errors in selected text and provides corrections using Google's Gemini AI model with hotkey support.
 
-## Wymagania
+## Requirements
 
 - Python 3.7+
-- Zależności: `pip install nltk spellchecker`
+- Google Gemini API key
+- Dependencies: see `requirements.txt`
 
-## Użycie
+## Setup
 
+1. Install dependencies:
 ```bash
-python main.py plik.txt
+pip install -r requirements.txt
 ```
 
-**Opcje:**
-- `-o poprawiony.txt` - zapisz poprawiony tekst do pliku
-- `-v` - szczegółowe informacje z statystykami
-
-## Przykład
-
-```bash
-python main.py dokument.txt -o poprawiony.txt -v
+2. Create a `.env` file based on `.env.example` and add your Google Gemini API key:
 ```
+GEMINI_API_KEY=your_api_key_here
+```
+
+3. Get your API key from: https://aistudio.google.com/app/apikey
+
+## Usage
+
+1. Run the script:
+```bash
+python main.py
+```
+
+2. Select any text in any application
+3. Press `Ctrl+Q` to correct spelling errors
+4. Press `Ctrl+Shift+Q` to exit the program
+
+## Features
+
+- Real-time spell checking with hotkeys
+- Works with any text selection in any application
+- Preserves original formatting and style
+- Uses Google Gemini AI for accurate corrections
+- Non-intrusive background operation
