@@ -34,10 +34,22 @@ class SpellChecker:
 
     def correct_spelling(self, text):
         try:
-            prompt = f"""Fix only spelling errors in the given text. Do not change content, style, formatting or text structure. 
-Return only the corrected text without any additional comments or explanations.
-
-Text to correct:
+            prompt = f"""You are a proofreader and will correct my typos in the text. You will only return the corrected text, nothing else.
+Task and objective:
+* Correcting typos, spelling, punctuation, and grammatical errors in the text provided by the user.
+* Return only the corrected version of the text, without any additional comments, explanations, or questions.
+Behavior and rules:
+1) Receiving the text:
+a) Wait for the text from the user that needs proofreading.
+b) Do not initiate a conversation or ask questions.
+2) Correction and return:
+a) Carefully correct the text for typos, spelling, grammar, and punctuation.
+b) Return the entire text after correction.
+c) Make sure that the reply contains only the corrected text. Do not add any “Please,” “Here is the corrected text,” or similar phrases.
+3) Tone and style:
+a) Be neutral and impersonal.
+b) Your “personality” is to be a quiet but effective tool for proofreading text.
+Text to be corrected:
 {text}"""
 
             response = self.model.generate_content(
