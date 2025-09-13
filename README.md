@@ -1,4 +1,4 @@
-# Typo correction
+# Typo correction 
 
 A Python script for automatic spell checking and correction using Google Gemini AI.
 
